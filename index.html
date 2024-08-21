@@ -18,4 +18,70 @@
   基于 <a href="https://github.com/cf-pages/Telegraph-Image" target="_blank" data-v-5d5649c4>Telegraph</a> 的图片上传工具
 </div></div></div></div></div><script>window.__NUXT__={layout:"default",data:[{}],error:null,serverRendered:!0}</script><script src="/_nuxt/318bf53201c4127c79fc.js" defer></script><script src="/_nuxt/b46e75617207ae5013d0.js" defer></script><script src="/_nuxt/71ef7c30e68aba4a3fc9.js" defer></script><script src="/_nuxt/9e35552f648a5a6a3b24.js" defer></script><script src="/_nuxt/fbd198cfd0f4459e2725.js" defer></script>
   </body>
+  <!-- import Vue before Element -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"
+    integrity="sha256-kXTEJcRFN330VirZFl6gj9+UM6gIKW195fYZeR3xDhc=" crossorigin="anonymous"></script>
+  <!-- import JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.3/lib/index.js"
+    integrity="sha256-OFVFYfqhQ9nDnKh+NfIsefpy/fnjTwkK909ZYgo45nw=" crossorigin="anonymous"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        Number: 0,
+        WhiteList: 0,
+        BlackList: 0,
+        showLogoutButton: false,
+        tableData: [],
+        dialogFormVisible: false,
+        formLabelWidth: '120px',
+        form: {
+          name: '',
+          id: ''
+        },
+        search: '',
+        password: '123456'
+      },
+      mounted() {
+        //check if the user is logged in
+        //read the basic auth credientials from the browser
+        var requestOptions = {
+          method: 'GET',
+          redirect: 'follow',
+          //include authorization credientials
+          credentials: 'include'
+        };
+        fetch("./api/manage/check", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            console.log(result);
+            if (result == "true") {
+            } else if (result == "Not using basic auth.") {
+
+            }
+            else {
+              window.location.href = "./api/manage/login";
+            }
+          })
+          .catch(error => { alert("An error occurred while synchronizing data with the server, please check the network connection"); console.log('error', error) });
+
+
+
+        Array.prototype.remove = function (from, to) {
+          var rest = this.slice((to || from) + 1 || this.length);
+          this.length = from < 0 ? this.length + from : from;
+          return this.push.apply(this, rest);
+        };
+        var requestOptions = {
+          method: 'GET',
+          redirect: 'follow',
+          //include authorization credientials
+          credentials: 'include'
+
+        };
+
+      }
+    })
+
+  </script><!-- Hotjar Tracking Code -->
 </html>
