@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waterfall</title>
+<style>
+  body{
+    background: linear-gradient(90deg, #ffd7e4 0%, #c8f1ff 100%);
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #49b1f5;
+    background-image: -webkit-linear-gradient(45deg, hsla(0, 0%, 100%, .4) 25%, transparent 0, transparent 50%, hsla(0, 0%, 100%, .4) 0, hsla(0, 0%, 100%, .4) 75%, transparent 0, transparent);
+    border-radius: 2em;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgba(73, 177, 245, .2);
+    border-radius: 2em;
+  }
+  .box {
+    position: relative;
+  }
+  img {
+    width: auto;
+    height: auto;
+    padding: 5px;
+    margin-left: 1.25%;
+    border-radius: 20px;
+    max-width: 100%; /* Ensure images don't exceed screen width */
+  }
+  #bigimg {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  #bigimg img {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 50%;
+    left: 50%;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+  }
+  /* Media queries for responsive design */
+  @media (max-width: 600px) {
+    img {
+      padding: 2px; /* Smaller padding on smaller screens */
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+  </div>
+  <!-- 放大遮罩层 -->
+  <div id="bigimg" onclick="closeBigImg();"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script> 
+<script>
+  var imgList;
+  $.ajax({
+    url: "./api/manage/list",
+    async: false,
+    dataType: "json",
+    success: function(data) {
+      imgList = data; // 将请求的数据赋值给全局变量
+    }
+});
+  var targetElement = document.querySelector('.box');
+  let str = '';
+  imgList.sort((a, b) => b.metadata.TimeStamp - a.metadata.TimeStamp);
+  for (let i = 0; i < imgList.length; i++){
+    if(imgList[i].name.indexOf(".mp4")>0)continue;
+    str += '<img onclick="showBigImg(this)" data-original='+"/file/"+imgList[i].name+' src='+"/file/"+imgList[i].name +'>';
+  }
+  targetElement.innerHTML = str;
+</script>
+</body>
+<script>
+  window.onload = $(function () {
+      let imgWidth = $('img').outerWidth(); // Get image width
+      waterfallHandler();
+
+      function waterfallHandler() {
+          let column = parseInt($(window).width() / imgWidth);
+          let heightArr = [];
+          for(let i=0; i<column; i++) {
+              heightArr[i] = 0;
+          }
+          $.each($('img'), function (index, item) {
+              let itemHeight = $(item).outerHeight();
+              let minHeight = Math.min(...heightArr);
+              let minIndex = heightArr.indexOf(minHeight);
+              $(item).css({
+                  position: 'absolute',
+                  top: minHeight + 'px',
+                  left: minIndex * imgWidth + 'px'
+              });
+
+              heightArr[minIndex] += itemHeight;
+          });
+      }
+
+      $(window).resize(function () {
+          waterfallHandler();
+      });
+  });
+  function showBigImg(img) {
+    var bigImg = document.getElementById('bigimg');
+    var imgUrl = img.getAttribute('data-original');
+    bigImg.innerHTML = '<img src="' + imgUrl + '">';
+    bigImg.style.display = 'block';
+  }
+
+  function closeBigImg() {
+    var bigImg = document.getElementById('bigimg');
+    bigImg.style.display = 'none';
+    bigImg.innerHTML = '';
+  }
+</script>
+</html>
