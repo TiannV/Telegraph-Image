@@ -91,6 +91,7 @@ async function errorHandling(context) {
                 }
             
         } else {
+            return context.next();
             return new Response('You need to login.', {
                 status: 401,
                 headers: {
