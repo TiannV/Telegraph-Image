@@ -75,6 +75,7 @@
 });
   var targetElement = document.querySelector('.box');
     let str ='';
+    imgList.sort((a, b) => b.metadata.TimeStamp - a.metadata.TimeStamp);
     for (let i = 0; i < imgList.length; i++){
       if(imgList[i].name.indexOf(".mp4")>0)continue;
       str += '<img onclick="showBigImg(this)" data-original='+"/file/"+imgList[i].name+' src='+"/file/"+imgList[i].name +'>';
