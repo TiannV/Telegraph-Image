@@ -243,8 +243,6 @@
       <el-main class="main-container">
         <div class="content">
           <template v-for="(item, index) in paginatedTableData" :key="index">
-            <el-card>
-              <el-checkbox v-model="item.selected"></el-checkbox>
               <el-image :src="'/file/' + item.name" :preview-src-list="['/file/' + item.name]" fit="cover"
                 lazy></el-image>
               <div class="image-overlay">
@@ -253,8 +251,6 @@
                   <el-button size="mini" type="danger" @click.stop="handleDelete(index, item.name)">删除</el-button>
                 </div>
               </div>
-              <div class="file-info">{{ item.name }}</div>
-            </el-card>
           </template>
         </div>
         <div class="pagination-container">
